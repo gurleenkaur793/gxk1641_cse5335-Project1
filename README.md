@@ -1,4 +1,3 @@
-== README
 
 * What server framework did you choose and why?<br>
 This application uses Ruby on Rails as a server framework. Ruby on rails was chosen over other frameworks because it is high in demand in market. Moreover it was easy to learn and development phase was paced up with the use of gems. It is robust, easy to maintain and stable. The automation provided by the gems makes the development process less tedious than in any other convectional framework. Apart from the development framework, it provides a separate testing and production framework to be used in respective environment.
