@@ -1,0 +1,212 @@
+	<!DOCTYPE html>
+	<html>
+	<head>
+	  <title>Cse5335-gxk1641</title>
+	  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	  
+	  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=&sensor=false&extension=.js"></script>
+		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	  <%= stylesheet_link_tag    'default', media: 'all', 'data-turbolinks-track' => true %>
+	  <%= javascript_include_tag 'default', 'data-turbolinks-track' => true %>
+	  <%= csrf_meta_tags %>
+	 
+	 
+		<style>
+
+			body {
+				margin: 20px;
+				font-size: 14px;
+				font-family: "Times New Roman",serif;
+			}
+		</style>
+		<style type="text/css">
+		#map {
+	    height:420px;
+	    width:600px;
+	}
+	.infoWindowContent {
+	    font-size:  14px !important;
+	    border-top: 1px solid #ccc;
+	    padding-top: 10px;
+	}
+	h2 {
+	    margin-bottom:0;
+	    margin-top: 0;
+	}
+	h1{
+	    margin-bottom:0;
+	    margin-top: 0;
+	}
+		* {
+	  margin: 0;
+	  padding: 0;
+	  box-sizing: border-box;
+	}
+
+	table {
+	  color: #333;
+	  font-family: sans-serif;
+	  font-size: .9em;
+	  font-weight: 300;
+	  text-align: left;
+	  line-height: 40px;
+	  border-spacing: 0;
+	  border: 2px solid #975997;
+	  width: 500px;
+	  margin: 50px auto;
+	}
+
+	thead tr:first-child {
+	  background: #975997;
+	  color: #fff;
+	  border: none;
+	}
+
+	th {font-weight: bold;}
+	th:first-child, td:first-child {padding: 0 15px 0 20px;}
+
+	thead tr:last-child th {border-bottom: 3px solid #ddd;}
+
+	tbody tr:hover {background-color: #ffeeff;}
+	tbody tr:last-child td {border: none;}
+	tbody td {border-bottom: 1px solid #ddd;}
+
+	td:last-child {
+	  text-align: right;
+	  padding-right: 10px;
+	}
+	button:focus {
+	    outline: none;
+	}
+
+	button:hover {
+	    background: #9b59b6;
+	}
+	button {
+	    width: 200px;
+	    height: 50px;
+	    background: #975997;
+	    border: none;
+	    border-radius: 50px;
+	    padding: 5px 0;
+	    cursor: pointer;
+	    -webkit-transition: .3s all ease;
+	    transition: .3s all ease;
+	    position: relative;
+	    color: #FFFFFF;
+	}
+
+
+	.alterar:hover {
+	  color: #0a79df;
+	}
+
+	.excluir:hover {
+	  color: #dc2a2a;
+	}
+	.chart {
+	    background: #eee;
+	    padding: 3px;
+	}
+
+	.chart div {
+	  width: 0;
+	  transition: all 1s ease-out;
+	  -moz-transition: all 1s ease-out;
+	  -webkit-transition: all 1s ease-out;
+	}
+
+	.chart div {
+	  font: 10px sans-serif;
+	  background-color: steelblue;
+	  text-align: right;
+	  padding: 3px;
+	  margin: 5px;
+	  color: white;
+	  box-shadow: 2px 2px 2px #666;
+	}
+		</style>
+
+
+
+		<script type="text/javascript">
+
+			
+			
+			angular.module('myapp',[])
+			.factory('clients', ['$http',function($http){
+
+				return{
+					getClients : function() {
+						return $http({
+							url: '/clients.json',
+							method: 'GET'
+						})
+					}
+				}
+
+			}])
+			.controller('myCtrl',['$scope','clients',function($scope,clients){
+
+				$scope.clients;
+				$scope.getdata = function(){
+					clients.getClients().success(function(data){
+						console.log(data);
+						$scope.clients=data;
+						showmarker(data);
+						//showpiechart(data);
+					});
+				};
+
+				showmarker = function(clients){
+					var mapOptions = {
+						zoom: 3,
+						center: new google.maps.LatLng(40.0000, -98.0000),
+						mapTypeId: google.maps.MapTypeId.TERRAIN
+					}
+					$scope.map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+					
+					$scope.markers = [];
+
+					var infoWindow = new google.maps.InfoWindow();
+
+					var createMarker = function (info){
+
+						console.log(info);
+						var marker = new google.maps.Marker({
+							map: $scope.map,
+							position: new google.maps.LatLng(info.lat,0-info.long),
+							title: info.address
+						});
+						marker.content = '<div class="infoWindowContent"> Client : ' + info.name + '</div>';
+
+						google.maps.event.addListener(marker, 'click', function(){
+							infoWindow.setContent('<h2>' + marker.title + '</h2>' + marker.content);
+							infoWindow.open($scope.map, marker);
+						});
+
+						$scope.markers.push(marker);
+
+					}  
+					console.log(clients.length);
+					for (i = 0; i < clients.length; i++){
+						createMarker(clients[i]);
+					}
+				}
+
+				
+
+			}]);
+				 
+
+		</script>
+	</head>
+
+	<body ng-app='myapp'>
+
+	<%= yield %>
+
+	</body>
+	</html>

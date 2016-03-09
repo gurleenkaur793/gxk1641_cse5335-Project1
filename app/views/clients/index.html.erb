@@ -1,0 +1,41 @@
+
+
+
+<div  ng-controller='myCtrl' align="center">
+	<div class="header">
+      <h1>Clients Details</h1>
+    </div>
+    <button class="button" ng-click='getdata()' align = "center">Get Details</button>
+   <div>
+		
+		<table>
+  			<thead ng-show= "clients">
+    			<tr>
+      				<th colspan="4">Client Details</th>
+
+    			</tr>
+    			<tr>
+					<th>#</th>
+					<th>Client Name</th>
+					<th>Address</th>
+					<th>Designation</th>
+				</tr>
+					
+    		</thead>
+  			<tbody ng-repeat="client in clients">
+    			<tr>
+					<th>{{client.id}}</th>
+					<td>{{client.name}}</td>
+					<td>{{client.address}}</td>
+					<td>{{client.designation}}</td>
+					
+				</tr>
+			
+  			</tbody>
+		</table>
+	</div>
+
+	<div id="map"></div>
+
+</div>
+</div>
